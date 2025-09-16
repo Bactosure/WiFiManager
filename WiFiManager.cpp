@@ -318,7 +318,7 @@ boolean WiFiManager::autoConnect()
  * @param  {[type]} char const         *apPassword [description]
  * @return {[type]}      [description]
  */
-boolean WiFiManager::autoConnect(char const *apName, char const *apPassword)
+boolean WiFiManager::autoConnect(char const *apName, char const *apPassword, boolean noConfigPortal)
 {
 #ifdef WM_DEBUG_LEVEL
   DEBUG_WM(F("AutoConnect"));
@@ -431,7 +431,7 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword)
   }
 
   // possibly skip the config portal
-  if (!_enableConfigPortal)
+  if (!_enableConfigPortal || noConfigPortal)
   {
 #ifdef WM_DEBUG_LEVEL
     DEBUG_WM(WM_DEBUG_VERBOSE, F("enableConfigPortal: FALSE, skipping "));
@@ -562,9 +562,9 @@ bool WiFiManager::startAP()
 
   int32_t channel = 0;
   // if (_channelSync)
-    // channel = WiFi.channel();
+  // channel = WiFi.channel();
   // else
-    channel = _apChannel;
+  channel = _apChannel;
 
   if (channel > 0)
   {
@@ -796,6 +796,7 @@ boolean WiFiManager::startConfigPortal()
  */
 boolean WiFiManager::startConfigPortal(char const *apName, char const *apPassword)
 {
+  apConnecting = false;
   _begin();
 
   if (configPortalActive)
@@ -1036,6 +1037,7 @@ uint8_t WiFiManager::processConfigPortal()
   if (connect)
   {
     connect = false;
+    apConnecting = true;
 #ifdef WM_DEBUG_LEVEL
     DEBUG_WM(WM_DEBUG_VERBOSE, F("processing save"));
 #endif
@@ -1133,6 +1135,7 @@ uint8_t WiFiManager::processConfigPortal()
  */
 bool WiFiManager::shutdownConfigPortal()
 {
+  apConnecting = false;
 #ifdef WM_DEBUG_LEVEL
   DEBUG_WM(WM_DEBUG_VERBOSE, F("shutdownConfigPortal"));
 #endif
@@ -2978,6 +2981,7 @@ void WiFiManager::reportStatus(String &page)
  */
 bool WiFiManager::stopConfigPortal()
 {
+  apConnecting = false;
   if (_configPortalIsBlocking)
   {
     abort = true;

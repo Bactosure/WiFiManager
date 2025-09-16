@@ -254,7 +254,7 @@ public:
 
     // auto connect to saved wifi, or custom, and start config portal on failures
     boolean autoConnect();
-    boolean autoConnect(char const *apName, char const *apPassword = NULL);
+    boolean autoConnect(char const *apName, char const *apPassword = NULL, boolean noConfigPortal = false);
 
     // manually start the config portal, autoconnect does this automatically on connect failure
     boolean startConfigPortal(); // auto generates apname
@@ -772,7 +772,11 @@ protected:
     String getInfoData(String id);
 
     // flags
-    boolean connect = false;
+public:
+    boolean connect = false; // William make this public
+    boolean apConnecting = false; // William make this public
+
+protected:
     boolean abort = false;
     boolean reset = false;
     boolean configPortalActive = false;
