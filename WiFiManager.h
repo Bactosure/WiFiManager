@@ -775,11 +775,11 @@ protected:
 public:
     boolean connect = false; // William make this public
     boolean apConnecting = false; // William make this public
+    boolean configPortalActive = false;
 
 protected:
     boolean abort = false;
     boolean reset = false;
-    boolean configPortalActive = false;
 
     // these are state flags for portal mode, we are either in webportal mode(STA) or configportal mode(AP)
     // these are mutually exclusive as STA+AP mode is not supported due to channel restrictions and stability
